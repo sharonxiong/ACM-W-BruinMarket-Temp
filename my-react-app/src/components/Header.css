@@ -1,3 +1,15 @@
+/*
+
+
+Background: #2774AE (UCLA blue)
+Logo background: #FFD100 (UCLA gold/yellow)
+Logo text: #2774AE (UCLA blue)
+Navigation text: White (text-white)
+"Sell Item" button: #FFD100 background with #2774AE text
+Active nav items: White with 20% opacity background
+Hover states: White with 10% opacity background
+*/
+
 .navbar {
   position: sticky;
   top: 0;
@@ -9,15 +21,15 @@
   gap: 16px;
 
   padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.85);
+  background:#2774AE;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid white ;
 }
 
 .navbar__brand {
   font-weight: 700;
   text-decoration: none;
-  color: inherit;
+  color: #FFD100;
   letter-spacing: 0.2px;
 }
 
@@ -29,19 +41,18 @@
 
 .navbar__link {
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.75);
+  color: #fefefe;
   padding: 8px 10px;
   border-radius: 10px;
 }
 
 .navbar__link:hover {
-  background: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.9);
+  color: #FFD100;
+  
 }
 
 .navbar__link--active {
-  background: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.95);
+  color: #FFD100;
 }
 
 .navbar__actions {
@@ -51,9 +62,10 @@
 }
 
 .navbar__button {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  background: #111827;
-  color: white;
+  border: 1px solid #FFD100;
+  ;
+  background: #FFD100;
+  color: #2774AE;
   padding: 8px 12px;
   border-radius: 12px;
   font-weight: 600;

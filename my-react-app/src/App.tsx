@@ -2,20 +2,19 @@ import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Header from "./components/Header";
-import AboutPage from "./pages/AboutPage";
-import BrowsePage from "./pages/BrowsePage";
+import CommunitiesPage from "./pages/CommunitiesPage";
 import HomePage from "./pages/HomePage";
-import SellPage from "./pages/SellPage";
-
+import EventsPage from "./pages/EventsPage";
+import { ProfilePage } from "./pages/ProfilePage";
 export default function App() {
   return (
     <div>
       <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/browse" element={<BrowsePage />} />
-        <Route path="/sell" element={<SellPage />} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/communities" element={<CommunitiesPage />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

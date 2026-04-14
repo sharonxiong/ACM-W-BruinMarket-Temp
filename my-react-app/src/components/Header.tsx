@@ -14,25 +14,23 @@ export default function Header() {
 
       <nav className="navbar__links" aria-label="Primary">
         <NavLink className={linkClass} to="/">
-          Home
+          Marketplace
         </NavLink>
-        <NavLink className={linkClass} to="/browse">
-          Browse
+        <NavLink className={linkClass} to="/communities">
+          Communitues
         </NavLink>
-        <NavLink className={linkClass} to="/sell">
-          Sell
+        <NavLink className={linkClass} to="/events">
+          Events
         </NavLink>
-        <NavLink className={linkClass} to="/about">
-          About
+        <NavLink className={linkClass} to="/profile">
+          Profile
         </NavLink>
       </nav>
 
       <div className="navbar__actions">
-        <button className="navbar__button navbar__button--ghost" type="button">
-          Sign in
-        </button>
+       
         <button className="navbar__button" type="button">
-          Post listing
+          + Sell Item
         </button>
       </div>
     </header>
