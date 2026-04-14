@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 
 export default function HomePage() {
@@ -9,3 +10,10 @@ export default function HomePage() {
   );
 }
 
+=======
+import "./HomePage.css";
+
+export function HomePage() {
+    
+}
+>>>>>>> 0b0b8a2abda9b5b97ef45cfe71359578c39e8db0
