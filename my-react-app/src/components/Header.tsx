@@ -13,17 +13,17 @@ export default function Header() {
       </NavLink>
 
       <nav className="navbar__links" aria-label="Primary">
-        <NavLink className={linkClass} to="/">
-          Home
+        <NavLink className={linkClass} to="/marketplace">
+          Marketplace
         </NavLink>
-        <NavLink className={linkClass} to="/browse">
-          Browse
+        <NavLink className={linkClass} to="/communities">
+          Communities
         </NavLink>
         <NavLink className={linkClass} to="/sell">
           Sell
         </NavLink>
-        <NavLink className={linkClass} to="/about">
-          About
+        <NavLink className={linkClass} to="/profile">
+          Profile
         </NavLink>
       </nav>
 
