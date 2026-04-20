@@ -8,40 +8,42 @@
   justify-content: space-between;
   gap: 16px;
 
-  padding: 12px 20px;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  padding: 12px 24px;
+  background: var(--ucla-blue);
+  border-bottom: 1px solid var(--ucla-blue-dark);
 }
 
 .navbar__brand {
   font-weight: 700;
+  font-size: 20px;
   text-decoration: none;
-  color: inherit;
+  color: white;
   letter-spacing: 0.2px;
 }
 
 .navbar__links {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 8px;
 }
 
 .navbar__link {
   text-decoration: none;
-  color: rgba(0, 0, 0, 0.75);
-  padding: 8px 10px;
+  color: rgba(255, 255, 255, 0.85);
+  padding: 8px 14px;
   border-radius: 10px;
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
 }
 
 .navbar__link:hover {
-  background: rgba(0, 0, 0, 0.06);
-  color: rgba(0, 0, 0, 0.9);
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
 }
 
 .navbar__link--active {
-  background: rgba(0, 0, 0, 0.08);
-  color: rgba(0, 0, 0, 0.95);
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .navbar__actions {
@@ -51,22 +53,29 @@
 }
 
 .navbar__button {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  background: #111827;
-  color: white;
-  padding: 8px 12px;
-  border-radius: 12px;
-  font-weight: 600;
+  border: none;
+  background: var(--ucla-gold);
+  color: var(--ucla-blue-dark);
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-weight: 700;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 .navbar__button--ghost {
   background: transparent;
-  color: rgba(0, 0, 0, 0.85);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.4);
 }
 
 .navbar__button:hover {
-  filter: brightness(1.05);
+  background: var(--ucla-gold-dark);
+}
+
+.navbar__button--ghost:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
 }
 
 @media (max-width: 720px) {
