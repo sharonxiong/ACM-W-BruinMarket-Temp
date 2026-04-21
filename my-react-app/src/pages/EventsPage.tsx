@@ -9,8 +9,6 @@ type CommunityEvent = {
   dateLabel: string;
   locationLabel: string;
   interestedCount: number;
-  imageUrl?: string;
-  isTrending?: boolean;
 };
 
 function EventIcon({
@@ -94,9 +92,6 @@ export default function CommunitiesPage() {
       dateLabel: "March 8, 2026",
       locationLabel: "Bruin Plaza",
       interestedCount: 234,
-      imageUrl:
-        "https://images.unsplash.com/photo-1520975682030-1fbbb4f54f5a?auto=format&fit=crop&w=1400&q=60",
-      isTrending: true,
     },
     {
       id: "farmers-market",
@@ -107,8 +102,6 @@ export default function CommunitiesPage() {
       dateLabel: "April 26, 2026",
       locationLabel: "Westwood Village",
       interestedCount: 412,
-      imageUrl:
-        "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=60",
     },
     {
       id: "textbook-swap",
@@ -119,8 +112,6 @@ export default function CommunitiesPage() {
       dateLabel: "May 2, 2026",
       locationLabel: "Powell Library Steps",
       interestedCount: 189,
-      imageUrl:
-        "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1400&q=60",
     },
   ];
 
@@ -136,24 +127,6 @@ export default function CommunitiesPage() {
       <section className="communities__grid" aria-label="Community events">
         {items.map((e) => (
           <article key={e.id} className="community-card">
-            <div className="community-card__media">
-              {e.imageUrl ? (
-                <img
-                  className="community-card__image"
-                  src={e.imageUrl}
-                  alt=""
-                  loading="lazy"
-                />
-              ) : (
-                <div className="community-card__image community-card__image--placeholder" />
-              )}
-              {e.isTrending ? (
-                <div className="community-card__badge" aria-label="Trending">
-                  Trending
-                </div>
-              ) : null}
-            </div>
-
             <div className="community-card__body community-card__body--event">
               <div className="community-card__pill">{e.tag}</div>
               <h2 className="community-card__title">{e.title}</h2>
