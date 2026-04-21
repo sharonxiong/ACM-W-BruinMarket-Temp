@@ -1,8 +1,8 @@
 /* Page layout */
 .communities {
     padding: 20px;
-    max-width: 1120px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
   }
   
   .communities__header {
