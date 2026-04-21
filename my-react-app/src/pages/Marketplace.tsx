@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import "./Marketplace.css";
 
 const CATEGORIES = [
@@ -12,14 +12,21 @@ const CATEGORIES = [
 ];
 
 const CATEGORY_ICONS: Record<string, string> = {
-  "Textbooks":       "📚",
-  "Electronics":     "💻",
-  "Furniture":       "🪑",
-  "Clothing":        "👕",
-  "Dorm Supplies":   "🛏️",
-  "Bikes & Scooters":"🚲",
-  "Free Stuff":      "🎁",
+  "Textbooks":        "📚",
+  "Electronics":      "💻",
+  "Furniture":        "🪑",
+  "Clothing":         "👕",
+  "Dorm Supplies":    "🛏️",
+  "Bikes & Scooters": "🚲",
+  "Free Stuff":       "🎁",
 };
+
+const STATS = [
+  { value: "500+", label: "Items listed" },
+  { value: "200+", label: "Active sellers" },
+  { value: "7",    label: "Categories" },
+  { value: "Free", label: "To use" },
+];
 
 const MAX_PRICE = 500;
 
@@ -43,158 +50,235 @@ export default function Marketplace() {
   const [category, setCategory]     = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
   const [starred, setStarred]       = useState<Set<number>>(new Set());
+  const listingsRef = useRef<HTMLElement>(null);
+
+  const scrollToListings = () =>
+    listingsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   const toggleStar = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
     setStarred((prev) => {
       const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
+      next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
   };
 
-  const filtered = useMemo(() => {
-    return mockItems.filter((i) => {
+  const filtered = useMemo(() =>
+    mockItems.filter((i) => {
       const q = search.toLowerCase().trim();
       const matchesSearch = !q || i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q);
       const matchesCategory = !category || i.category === category;
       return matchesSearch && matchesCategory;
-    });
-  }, [search, category]);
+    }),
+    [search, category]
+  );
 
   return (
-    <main className="marketplace-page">
+    <main className="mp-page">
 
       {/* ── Hero ── */}
-      <div className="marketplace-hero">
-        <h1 className="hero-title">Bruin<span>Market</span></h1>
-        <p className="hero-subtitle">Buy and sell with fellow Bruins</p>
-        <div className="marketplace-topbar">
-          <span className="search-icon">🔍</span>
-          <input
-            className="marketplace-search"
-            type="text"
-            placeholder="Search for textbooks, electronics, furniture…"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
+      <section className="mp-hero">
+        <div className="mp-hero-left">
+          <span className="mp-eyebrow">UCLA's Student Marketplace</span>
+          <h1 className="mp-headline">
+            Buy smart.<br />Sell fast.<br />
+            <span className="mp-headline-accent">Stay Bruin.</span>
+          </h1>
+          <p className="mp-subtext">
+            Trade textbooks, gear, furniture & more with fellow Bruins —
+            no shipping, no strangers.
+          </p>
+          <div className="mp-ctas">
+            <button className="mp-btn-primary" onClick={scrollToListings}>
+              Browse listings
+            </button>
+            <button className="mp-btn-secondary">Start selling →</button>
+          </div>
         </div>
-      </div>
 
-      {/* ── Category chips ── */}
-      <div className="category-chips">
-        <button
-          className={`chip${!category ? " chip--active" : ""}`}
-          onClick={() => setCategory("")}
-        >
-          All
-        </button>
-        {CATEGORIES.map((cat) => (
-          <button
-            key={cat}
-            className={`chip${category === cat ? " chip--active" : ""}`}
-            onClick={() => setCategory(cat)}
-          >
-            {CATEGORY_ICONS[cat]} {cat}
-          </button>
+        <div className="mp-hero-right" aria-hidden="true">
+          <div className="pc pc--1">
+            <span className="pc-icon">📚</span>
+            <span className="pc-title">Calculus Textbook</span>
+            <span className="pc-price">$40</span>
+          </div>
+          <div className="pc pc--2">
+            <span className="pc-icon">💻</span>
+            <span className="pc-title">MacBook Charger</span>
+            <span className="pc-price">$35</span>
+          </div>
+          <div className="pc pc--3">
+            <span className="pc-icon">🪑</span>
+            <span className="pc-title">Standing Desk</span>
+            <span className="pc-price">$120</span>
+          </div>
+          <div className="pc pc--4">
+            <span className="pc-icon">🎁</span>
+            <span className="pc-title">Free Moving Boxes</span>
+            <span className="pc-price pc-price--free">Free</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats bar ── */}
+      <div className="mp-stats">
+        {STATS.map((s) => (
+          <div key={s.label} className="mp-stat">
+            <strong className="mp-stat-value">{s.value}</strong>
+            <span className="mp-stat-label">{s.label}</span>
+          </div>
         ))}
       </div>
 
-      <div className="marketplace-body">
+      {/* ── Category tiles ── */}
+      <section className="mp-categories">
+        <h2 className="mp-section-heading">Shop by Category</h2>
+        <div className="mp-cat-grid">
+          {CATEGORIES.map((cat) => (
+            <button
+              key={cat}
+              className={`mp-cat-tile${category === cat ? " mp-cat-tile--active" : ""}`}
+              onClick={() => { setCategory(cat === category ? "" : cat); scrollToListings(); }}
+            >
+              <span className="mp-cat-icon">{CATEGORY_ICONS[cat]}</span>
+              <span className="mp-cat-name">{cat}</span>
+            </button>
+          ))}
+        </div>
+      </section>
 
-        {/* ── Sidebar filters ── */}
-        <aside className="marketplace-sidebar">
-          <div className="filter-section">
-            <h3 className="filter-heading">Filters</h3>
-
-            <div className="filter-group">
-              <label className="filter-label" htmlFor="category-select">Category</label>
-              <select
-                id="category-select"
-                className="filter-select"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-              >
-                <option value="">All Categories</option>
-                {CATEGORIES.map((cat) => (
-                  <option key={cat} value={cat}>{cat}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="filter-group">
-              <label className="filter-label">Price Range</label>
-              <div className="price-range-display">
-                <span>${priceRange[0]}</span>
-                <span>${priceRange[1] === MAX_PRICE ? `${MAX_PRICE}+` : priceRange[1]}</span>
-              </div>
-              <div className="range-track">
-                <div
-                  className="range-fill"
-                  style={{
-                    left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
-                    width: `${((priceRange[1] - priceRange[0]) / MAX_PRICE) * 100}%`,
-                  }}
-                />
-                <input
-                  type="range" min={0} max={MAX_PRICE} step={5}
-                  value={priceRange[0]}
-                  onChange={(e) => {
-                    const v = Number(e.target.value);
-                    if (v < priceRange[1]) setPriceRange([v, priceRange[1]]);
-                  }}
-                  className="range-input range-input--low"
-                />
-                <input
-                  type="range" min={0} max={MAX_PRICE} step={5}
-                  value={priceRange[1]}
-                  onChange={(e) => {
-                    const v = Number(e.target.value);
-                    if (v > priceRange[0]) setPriceRange([priceRange[0], v]);
-                  }}
-                  className="range-input range-input--high"
-                />
-              </div>
-            </div>
+      {/* ── Listings ── */}
+      <section className="mp-listings" ref={listingsRef}>
+        <div className="mp-listings-header">
+          <div className="mp-listings-title-row">
+            <h2 className="mp-section-heading mp-section-heading--flush">
+              {category || "All Listings"}
+            </h2>
+            <span className="mp-listing-count">
+              {filtered.length} {filtered.length === 1 ? "item" : "items"}
+            </span>
           </div>
-        </aside>
+          <div className="mp-search-wrap">
+            <span className="mp-search-icon">🔍</span>
+            <input
+              className="mp-search"
+              type="text"
+              placeholder="Search listings…"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+        </div>
 
-        {/* ── Items grid ── */}
-        <section className="marketplace-content">
-          <p className="results-count">
-            {filtered.length} {filtered.length === 1 ? "item" : "items"}
-          </p>
+        <div className="mp-listings-body">
+          {/* Sidebar */}
+          <aside className="mp-sidebar">
+            <div className="mp-filter-section">
+              <p className="mp-filter-heading">Filters</p>
 
-          <div className="items-grid">
-            {filtered.map((item) => (
-              <div key={item.id} className="item-card">
-                <div className="item-placeholder">
-                  <span className="item-category-icon">{CATEGORY_ICONS[item.category]}</span>
-                  <button
-                    className={`star-btn${starred.has(item.id) ? " star-btn--active" : ""}`}
-                    onClick={(e) => toggleStar(item.id, e)}
-                    title={starred.has(item.id) ? "Remove from starred" : "Star this item"}
-                  >
-                    {starred.has(item.id) ? "★" : "☆"}
-                  </button>
-                  <span className="item-category-tag">{item.category}</span>
+              <div className="mp-filter-group">
+                <label className="mp-filter-label" htmlFor="cat-select">Category</label>
+                <select
+                  id="cat-select"
+                  className="mp-filter-select"
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                >
+                  <option value="">All Categories</option>
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mp-filter-group">
+                <label className="mp-filter-label">Price Range</label>
+                <div className="mp-price-display">
+                  <span>${priceRange[0]}</span>
+                  <span>${priceRange[1] === MAX_PRICE ? `${MAX_PRICE}+` : priceRange[1]}</span>
                 </div>
-                <div className="item-info">
-                  <p className="item-title">{item.title}</p>
-                  <p className="item-price">
-                    {item.price === 0
-                      ? <span className="price-free">Free</span>
-                      : `$${item.price}`}
-                  </p>
-                  <p className="item-seller">by {item.seller}</p>
+                <div className="mp-range-track">
+                  <div
+                    className="mp-range-fill"
+                    style={{
+                      left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
+                      width: `${((priceRange[1] - priceRange[0]) / MAX_PRICE) * 100}%`,
+                    }}
+                  />
+                  <input
+                    type="range" min={0} max={MAX_PRICE} step={5}
+                    value={priceRange[0]}
+                    onChange={(e) => {
+                      const v = Number(e.target.value);
+                      if (v < priceRange[1]) setPriceRange([v, priceRange[1]]);
+                    }}
+                    className="mp-range-input mp-range-input--low"
+                  />
+                  <input
+                    type="range" min={0} max={MAX_PRICE} step={5}
+                    value={priceRange[1]}
+                    onChange={(e) => {
+                      const v = Number(e.target.value);
+                      if (v > priceRange[0]) setPriceRange([priceRange[0], v]);
+                    }}
+                    className="mp-range-input mp-range-input--high"
+                  />
                 </div>
               </div>
-            ))}
-          </div>
-        </section>
 
-      </div>
+              {(category || search) && (
+                <button
+                  className="mp-clear-btn"
+                  onClick={() => { setCategory(""); setSearch(""); }}
+                >
+                  Clear filters
+                </button>
+              )}
+            </div>
+          </aside>
+
+          {/* Grid */}
+          <div className="mp-grid">
+            {filtered.length === 0 ? (
+              <div className="mp-empty">
+                <span>🔍</span>
+                <p>No items match your search.</p>
+                <button className="mp-clear-btn" onClick={() => { setCategory(""); setSearch(""); }}>
+                  Clear filters
+                </button>
+              </div>
+            ) : (
+              filtered.map((item) => (
+                <div key={item.id} className="mp-card">
+                  <div className="mp-card-img">
+                    <span className="mp-card-emoji">{CATEGORY_ICONS[item.category]}</span>
+                    <button
+                      className={`mp-star${starred.has(item.id) ? " mp-star--on" : ""}`}
+                      onClick={(e) => toggleStar(item.id, e)}
+                      title={starred.has(item.id) ? "Unsave" : "Save"}
+                    >
+                      {starred.has(item.id) ? "★" : "☆"}
+                    </button>
+                  </div>
+                  <div className="mp-card-body">
+                    <p className="mp-card-title">{item.title}</p>
+                    <div className="mp-card-footer">
+                      <span className="mp-card-price">
+                        {item.price === 0
+                          ? <span className="mp-card-free">Free</span>
+                          : `$${item.price}`}
+                      </span>
+                      <span className="mp-card-seller">{item.seller}</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </section>
+
     </main>
   );
 }
