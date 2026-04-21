@@ -11,21 +11,31 @@ const CATEGORIES = [
   "Free Stuff",
 ];
 
+const CATEGORY_ICONS: Record<string, string> = {
+  "Textbooks":       "📚",
+  "Electronics":     "💻",
+  "Furniture":       "🪑",
+  "Clothing":        "👕",
+  "Dorm Supplies":   "🛏️",
+  "Bikes & Scooters":"🚲",
+  "Free Stuff":      "🎁",
+};
+
 const MAX_PRICE = 500;
 
 const mockItems = [
-  { id: 1,  title: "Modern Desk Lamp",           price: 25,  category: "Dorm Supplies",     seller: "Sarah C."  },
-  { id: 2,  title: "Calculus Textbook (8th Ed.)", price: 40,  category: "Textbooks",          seller: "James L."  },
-  { id: 3,  title: "Vintage Backpack",            price: 30,  category: "Clothing",           seller: "Mia T."    },
-  { id: 4,  title: "Standing Desk",               price: 120, category: "Furniture",          seller: "Kevin R."  },
-  { id: 5,  title: "MacBook Pro Charger",         price: 35,  category: "Electronics",        seller: "Priya S."  },
-  { id: 6,  title: "Trek Mountain Bike",          price: 280, category: "Bikes & Scooters",   seller: "Daniel W." },
-  { id: 7,  title: "IKEA Desk Chair",             price: 55,  category: "Furniture",          seller: "Anna K."   },
-  { id: 8,  title: "Free Moving Boxes",           price: 0,   category: "Free Stuff",         seller: "Chris M."  },
-  { id: 9,  title: "Python Programming Book",     price: 20,  category: "Textbooks",          seller: "Lily H."   },
-  { id: 10, title: "Noise-Cancelling Headphones", price: 90,  category: "Electronics",        seller: "Omar N."   },
-  { id: 11, title: "Mini Fridge",                 price: 75,  category: "Dorm Supplies",      seller: "Jen B."    },
-  { id: 12, title: "UCLA Hoodie (M)",             price: 18,  category: "Clothing",           seller: "Tyler S."  },
+  { id: 1,  title: "Modern Desk Lamp",            price: 25,  category: "Dorm Supplies",    seller: "Sarah C."  },
+  { id: 2,  title: "Calculus Textbook (8th Ed.)", price: 40,  category: "Textbooks",         seller: "James L."  },
+  { id: 3,  title: "Vintage Backpack",             price: 30,  category: "Clothing",          seller: "Mia T."    },
+  { id: 4,  title: "Standing Desk",                price: 120, category: "Furniture",         seller: "Kevin R."  },
+  { id: 5,  title: "MacBook Pro Charger",          price: 35,  category: "Electronics",       seller: "Priya S."  },
+  { id: 6,  title: "Trek Mountain Bike",           price: 280, category: "Bikes & Scooters",  seller: "Daniel W." },
+  { id: 7,  title: "IKEA Desk Chair",              price: 55,  category: "Furniture",         seller: "Anna K."   },
+  { id: 8,  title: "Free Moving Boxes",            price: 0,   category: "Free Stuff",        seller: "Chris M."  },
+  { id: 9,  title: "Python Programming Book",      price: 20,  category: "Textbooks",         seller: "Lily H."   },
+  { id: 10, title: "Noise-Cancelling Headphones",  price: 90,  category: "Electronics",       seller: "Omar N."   },
+  { id: 11, title: "Mini Fridge",                  price: 75,  category: "Dorm Supplies",     seller: "Jen B."    },
+  { id: 12, title: "UCLA Hoodie (M)",              price: 18,  category: "Clothing",          seller: "Tyler S."  },
 ];
 
 export default function Marketplace() {
@@ -44,35 +54,60 @@ export default function Marketplace() {
     });
   };
 
-  // Only search filters the grid — price and category are visual only for now
   const filtered = useMemo(() => {
-    if (!search.trim()) return mockItems;
-    const q = search.toLowerCase();
-    return mockItems.filter(
-      (i) => i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)
-    );
-  }, [search]);
+    return mockItems.filter((i) => {
+      const q = search.toLowerCase().trim();
+      const matchesSearch = !q || i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q);
+      const matchesCategory = !category || i.category === category;
+      return matchesSearch && matchesCategory;
+    });
+  }, [search, category]);
 
   return (
     <main className="marketplace-page">
-      {/* Search bar */}
-      <div className="marketplace-topbar">
-        <input
-          className="marketplace-search"
-          type="text"
-          placeholder="Search items..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+
+      {/* ── Hero ── */}
+      <div className="marketplace-hero">
+        <h1 className="hero-title">Bruin<span>Market</span></h1>
+        <p className="hero-subtitle">Buy and sell with fellow Bruins</p>
+        <div className="marketplace-topbar">
+          <span className="search-icon">🔍</span>
+          <input
+            className="marketplace-search"
+            type="text"
+            placeholder="Search for textbooks, electronics, furniture…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+
+      {/* ── Category chips ── */}
+      <div className="category-chips">
+        <button
+          className={`chip${!category ? " chip--active" : ""}`}
+          onClick={() => setCategory("")}
+        >
+          All
+        </button>
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            className={`chip${category === cat ? " chip--active" : ""}`}
+            onClick={() => setCategory(cat)}
+          >
+            {CATEGORY_ICONS[cat]} {cat}
+          </button>
+        ))}
       </div>
 
       <div className="marketplace-body">
-        {/* Sidebar filters */}
+
+        {/* ── Sidebar filters ── */}
         <aside className="marketplace-sidebar">
           <div className="filter-section">
             <h3 className="filter-heading">Filters</h3>
 
-            {/* Category dropdown */}
             <div className="filter-group">
               <label className="filter-label" htmlFor="category-select">Category</label>
               <select
@@ -88,7 +123,6 @@ export default function Marketplace() {
               </select>
             </div>
 
-            {/* Price range */}
             <div className="filter-group">
               <label className="filter-label">Price Range</label>
               <div className="price-range-display">
@@ -126,7 +160,7 @@ export default function Marketplace() {
           </div>
         </aside>
 
-        {/* Items grid */}
+        {/* ── Items grid ── */}
         <section className="marketplace-content">
           <p className="results-count">
             {filtered.length} {filtered.length === 1 ? "item" : "items"}
@@ -136,6 +170,7 @@ export default function Marketplace() {
             {filtered.map((item) => (
               <div key={item.id} className="item-card">
                 <div className="item-placeholder">
+                  <span className="item-category-icon">{CATEGORY_ICONS[item.category]}</span>
                   <button
                     className={`star-btn${starred.has(item.id) ? " star-btn--active" : ""}`}
                     onClick={(e) => toggleStar(item.id, e)}
@@ -158,6 +193,7 @@ export default function Marketplace() {
             ))}
           </div>
         </section>
+
       </div>
     </main>
   );
