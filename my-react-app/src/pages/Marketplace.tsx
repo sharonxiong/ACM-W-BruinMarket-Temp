@@ -21,13 +21,6 @@ const CATEGORY_ICONS: Record<string, string> = {
   "Free Stuff":       "🎁",
 };
 
-const STATS = [
-  { value: "500+", label: "Items listed" },
-  { value: "200+", label: "Active sellers" },
-  { value: "7",    label: "Categories" },
-  { value: "Free", label: "To use" },
-];
-
 const MAX_PRICE = 500;
 
 const mockItems = [
@@ -120,16 +113,6 @@ export default function Marketplace() {
           </div>
         </div>
       </section>
-
-      {/* ── Stats bar ── */}
-      <div className="mp-stats">
-        {STATS.map((s) => (
-          <div key={s.label} className="mp-stat">
-            <strong className="mp-stat-value">{s.value}</strong>
-            <span className="mp-stat-label">{s.label}</span>
-          </div>
-        ))}
-      </div>
 
       {/* ── Category tiles ── */}
       <section className="mp-categories">

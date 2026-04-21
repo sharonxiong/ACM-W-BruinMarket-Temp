@@ -163,40 +163,6 @@
 
 .pc-price--free { background: #2e7d32; }
 
-/* ══ STATS BAR ═════════════════════════════════════ */
-
-.mp-stats {
-  background: white;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: center;
-}
-
-.mp-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 3px;
-  padding: 24px 56px;
-  border-right: 1px solid var(--border);
-}
-
-.mp-stat:last-child { border-right: none; }
-
-.mp-stat-value {
-  font-family: var(--heading);
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--ucla-blue);
-  line-height: 1;
-}
-
-.mp-stat-label {
-  font-size: 12px;
-  color: #999;
-  font-weight: 500;
-}
-
 /* ══ CATEGORY TILES ════════════════════════════════ */
 
 .mp-categories {
@@ -602,8 +568,6 @@
   }
   .mp-hero-right  { display: none; }
   .mp-headline    { font-size: 42px; }
-  .mp-stats       { flex-wrap: wrap; }
-  .mp-stat        { padding: 18px 28px; border-right: none; border-bottom: 1px solid var(--border); width: 50%; box-sizing: border-box; }
   .mp-cat-grid    { grid-template-columns: repeat(4, 1fr); }
   .mp-categories  { padding: 28px 24px; }
   .mp-listings    { padding: 28px 24px; }
@@ -616,5 +580,5 @@
 @media (max-width: 520px) {
   .mp-headline    { font-size: 34px; letter-spacing: -1px; }
   .mp-cat-grid    { grid-template-columns: repeat(2, 1fr); }
-  .mp-stat        { width: 50%; }
+
 }
