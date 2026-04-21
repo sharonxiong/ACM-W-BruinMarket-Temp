@@ -4,7 +4,7 @@ import "./App.css";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Marketplace from "./pages/Marketplace";
-import CommunitiesPage from "./pages/CommunitiesPage";
+import EventsPage from "./pages/EventsPage";
 import SellPage from "./pages/SellPage";
 import ProfilePage from "./pages/ProfilePage";
 
@@ -15,7 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Marketplace />} />
         <Route path="/marketplace" element={<Marketplace />} />
-        <Route path="/communities" element={<CommunitiesPage />} />
+        <Route path="/events" element={<EventsPage />} />
         <Route path="/sell" element={<SellPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="*" element={<Navigate to="/" replace />} />

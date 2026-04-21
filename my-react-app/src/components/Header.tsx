@@ -16,8 +16,8 @@ export default function Header() {
         <NavLink className={linkClass} to="/marketplace">
           Marketplace
         </NavLink>
-        <NavLink className={linkClass} to="/communities">
-          Communities
+        <NavLink className={linkClass} to="/events">
+          Events
         </NavLink>
         <NavLink className={linkClass} to="/sell">
           Sell
