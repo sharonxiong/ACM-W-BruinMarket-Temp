@@ -12,6 +12,7 @@ export default function App() {
     <div>
       <Header />
       <Routes>
+        <Route path="/" element={<Marketplace />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/communities" element={<CommunitiesPage />} />
         <Route path="/sell" element={<SellPage />} />
