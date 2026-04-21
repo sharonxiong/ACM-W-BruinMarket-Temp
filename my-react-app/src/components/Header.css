@@ -13,12 +13,53 @@
   border-bottom: 1px solid var(--ucla-blue-dark);
 }
 
+.navbar__search-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 480px;
+}
+
+.navbar__search-icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  pointer-events: none;
+}
+
+.navbar__search {
+  width: 100%;
+  padding: 9px 18px 9px 36px;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  font-size: 14px;
+  font-family: var(--sans);
+  box-sizing: border-box;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.navbar__search::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.navbar__search:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.65);
+}
+
 .navbar__brand {
-  font-weight: 700;
-  font-size: 20px;
+  font-family: 'Fredoka One', cursive;
+  font-weight: 400;
+  font-size: 24px;
   text-decoration: none;
   color: white;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.5px;
 }
 
 .navbar__links {
@@ -31,7 +72,7 @@
   text-decoration: none;
   color: rgba(255, 255, 255, 0.85);
   padding: 8px 14px;
-  border-radius: 10px;
+  border-radius: 0;
   font-weight: 500;
   transition: background 0.2s, color 0.2s;
 }
@@ -57,7 +98,7 @@
   background: var(--ucla-gold);
   color: var(--ucla-blue-dark);
   padding: 9px 16px;
-  border-radius: 10px;
+  border-radius: 0;
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;

@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import "./Marketplace.css";
 
 const CATEGORIES = [
@@ -11,15 +12,6 @@ const CATEGORIES = [
   "Free Stuff",
 ];
 
-const CATEGORY_ICONS: Record<string, string> = {
-  "Textbooks":        "📚",
-  "Electronics":      "💻",
-  "Furniture":        "🪑",
-  "Clothing":         "👕",
-  "Dorm Supplies":    "🛏️",
-  "Bikes & Scooters": "🚲",
-  "Free Stuff":       "🎁",
-};
 
 const MAX_PRICE = 500;
 
@@ -39,7 +31,9 @@ const mockItems = [
 ];
 
 export default function Marketplace() {
-  const [search, setSearch]         = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const clearSearch = () => setSearchParams({}, { replace: true });
+  const search = searchParams.get("q") ?? "";
   const [category, setCategory]     = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
   const [starred, setStarred]       = useState<Set<number>>(new Set());
@@ -90,28 +84,6 @@ export default function Marketplace() {
           </div>
         </div>
 
-        <div className="mp-hero-right" aria-hidden="true">
-          <div className="pc pc--1">
-            <span className="pc-icon">📚</span>
-            <span className="pc-title">Calculus Textbook</span>
-            <span className="pc-price">$40</span>
-          </div>
-          <div className="pc pc--2">
-            <span className="pc-icon">💻</span>
-            <span className="pc-title">MacBook Charger</span>
-            <span className="pc-price">$35</span>
-          </div>
-          <div className="pc pc--3">
-            <span className="pc-icon">🪑</span>
-            <span className="pc-title">Standing Desk</span>
-            <span className="pc-price">$120</span>
-          </div>
-          <div className="pc pc--4">
-            <span className="pc-icon">🎁</span>
-            <span className="pc-title">Free Moving Boxes</span>
-            <span className="pc-price pc-price--free">Free</span>
-          </div>
-        </div>
       </section>
 
       {/* ── Category tiles ── */}
@@ -124,7 +96,6 @@ export default function Marketplace() {
               className={`mp-cat-tile${category === cat ? " mp-cat-tile--active" : ""}`}
               onClick={() => { setCategory(cat === category ? "" : cat); scrollToListings(); }}
             >
-              <span className="mp-cat-icon">{CATEGORY_ICONS[cat]}</span>
               <span className="mp-cat-name">{cat}</span>
             </button>
           ))}
@@ -141,16 +112,6 @@ export default function Marketplace() {
             <span className="mp-listing-count">
               {filtered.length} {filtered.length === 1 ? "item" : "items"}
             </span>
-          </div>
-          <div className="mp-search-wrap">
-            <span className="mp-search-icon">🔍</span>
-            <input
-              className="mp-search"
-              type="text"
-              placeholder="Search listings…"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
           </div>
         </div>
 
@@ -213,7 +174,7 @@ export default function Marketplace() {
               {(category || search) && (
                 <button
                   className="mp-clear-btn"
-                  onClick={() => { setCategory(""); setSearch(""); }}
+                  onClick={() => { setCategory(""); clearSearch(); }}
                 >
                   Clear filters
                 </button>
@@ -225,35 +186,39 @@ export default function Marketplace() {
           <div className="mp-grid">
             {filtered.length === 0 ? (
               <div className="mp-empty">
-                <span>🔍</span>
                 <p>No items match your search.</p>
-                <button className="mp-clear-btn" onClick={() => { setCategory(""); setSearch(""); }}>
+                <button className="mp-clear-btn" onClick={() => { setCategory(""); clearSearch(); }}>
                   Clear filters
                 </button>
               </div>
             ) : (
               filtered.map((item) => (
                 <div key={item.id} className="mp-card">
-                  <div className="mp-card-img">
-                    <span className="mp-card-emoji">{CATEGORY_ICONS[item.category]}</span>
-                    <button
-                      className={`mp-star${starred.has(item.id) ? " mp-star--on" : ""}`}
-                      onClick={(e) => toggleStar(item.id, e)}
-                      title={starred.has(item.id) ? "Unsave" : "Save"}
-                    >
-                      {starred.has(item.id) ? "★" : "☆"}
-                    </button>
-                  </div>
+                  <div className="mp-card-img" />
+                  <span className="mp-card-time">recently</span>
                   <div className="mp-card-body">
                     <p className="mp-card-title">{item.title}</p>
+                    <div className="mp-card-brand-row">
+                      <span className="mp-card-brand">{item.seller}</span>
+                      <span className="mp-card-category">{item.category}</span>
+                    </div>
                     <div className="mp-card-footer">
                       <span className="mp-card-price">
                         {item.price === 0
                           ? <span className="mp-card-free">Free</span>
                           : `$${item.price}`}
                       </span>
-                      <span className="mp-card-seller">{item.seller}</span>
+                      <button
+                        className={`mp-heart${starred.has(item.id) ? " mp-heart--on" : ""}`}
+                        onClick={(e) => toggleStar(item.id, e)}
+                        title={starred.has(item.id) ? "Unsave" : "Save"}
+                      >
+                        <svg viewBox="0 0 24 24" fill={starred.has(item.id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                          <path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.91 3.81 13 5.08C14.09 3.81 15.76 3 17.5 3C20.58 3 23 5.42 23 8.5C23 14.5 14 21 12 21Z" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
                     </div>
+                    <span className="mp-card-location">UCLA Campus</span>
                   </div>
                 </div>
               ))
