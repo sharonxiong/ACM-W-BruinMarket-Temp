@@ -1,196 +1,164 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./ProfilePage.css";
+import { useState, useMemo } from "react";
+import "./Marketplace.css";
 
-const mockListings = [
-  { id: 1, title: "Modern Desk Lamp", price: 25, status: "Active" },
-  { id: 2, title: "Calculus Textbook", price: 40, status: "Sold" },
-  { id: 3, title: "Mechanical Keyboard", price: 65, status: "Active" },
-  { id: 4, title: "IKEA Shelf (White)", price: 20, status: "Active" },
+const CATEGORIES = [
+  "Textbooks",
+  "Electronics",
+  "Furniture",
+  "Clothing",
+  "Dorm Supplies",
+  "Bikes & Scooters",
+  "Free Stuff",
 ];
 
-const mockSaved = [
-  { id: 5, title: "Vintage Backpack", price: 30, status: "Active" },
-  { id: 6, title: "Coffee Maker", price: 45, status: "Active" },
-  { id: 7, title: "Yoga Mat", price: 18, status: "Active" },
+const MAX_PRICE = 500;
+
+const mockItems = [
+  { id: 1,  title: "Modern Desk Lamp",           price: 25,  category: "Dorm Supplies",     seller: "Sarah C."  },
+  { id: 2,  title: "Calculus Textbook (8th Ed.)", price: 40,  category: "Textbooks",          seller: "James L."  },
+  { id: 3,  title: "Vintage Backpack",            price: 30,  category: "Clothing",           seller: "Mia T."    },
+  { id: 4,  title: "Standing Desk",               price: 120, category: "Furniture",          seller: "Kevin R."  },
+  { id: 5,  title: "MacBook Pro Charger",         price: 35,  category: "Electronics",        seller: "Priya S."  },
+  { id: 6,  title: "Trek Mountain Bike",          price: 280, category: "Bikes & Scooters",   seller: "Daniel W." },
+  { id: 7,  title: "IKEA Desk Chair",             price: 55,  category: "Furniture",          seller: "Anna K."   },
+  { id: 8,  title: "Free Moving Boxes",           price: 0,   category: "Free Stuff",         seller: "Chris M."  },
+  { id: 9,  title: "Python Programming Book",     price: 20,  category: "Textbooks",          seller: "Lily H."   },
+  { id: 10, title: "Noise-Cancelling Headphones", price: 90,  category: "Electronics",        seller: "Omar N."   },
+  { id: 11, title: "Mini Fridge",                 price: 75,  category: "Dorm Supplies",      seller: "Jen B."    },
+  { id: 12, title: "UCLA Hoodie (M)",             price: 18,  category: "Clothing",           seller: "Tyler S."  },
 ];
 
-const mockReviews = [
-  {
-    id: 1,
-    reviewer: "Alex K.",
-    initials: "AK",
-    rating: 5,
-    comment: "Great seller, item exactly as described! Packaged carefully and responded super fast.",
-    date: "March 2026",
-  },
-  {
-    id: 2,
-    reviewer: "Mia L.",
-    initials: "ML",
-    rating: 5,
-    comment: "Smooth transaction and Sarah was very communicative. Would definitely buy from her again!",
-    date: "February 2026",
-  },
-  {
-    id: 3,
-    reviewer: "Jordan T.",
-    initials: "JT",
-    rating: 4,
-    comment: "Good condition overall, minor wear not mentioned but totally fair for the price.",
-    date: "January 2026",
-  },
-];
+export default function Marketplace() {
+  const [search, setSearch]         = useState("");
+  const [category, setCategory]     = useState("");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
+  const [starred, setStarred]       = useState<Set<number>>(new Set());
 
-type Tab = "listings" | "saved" | "reviews";
+  const toggleStar = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setStarred((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
-export default function ProfilePage() {
-  const [activeTab, setActiveTab] = useState<Tab>("listings");
-  const navigate = useNavigate();
+  // Only search filters the grid — price and category are visual only for now
+  const filtered = useMemo(() => {
+    if (!search.trim()) return mockItems;
+    const q = search.toLowerCase();
+    return mockItems.filter(
+      (i) => i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q)
+    );
+  }, [search]);
 
   return (
-    <main className="profile-page">
-      {/* Profile Card */}
-      <div className="profile-card">
-        <div className="profile-banner">
-          <div className="profile-avatar-wrap">
-            <div className="profile-avatar" />
-          </div>
-        </div>
-
-        <div className="profile-body">
-          <div className="profile-header-row">
-            <div>
-              <div className="profile-name-row">
-                <h2 className="profile-name">Sarah Chen</h2>
-                <span className="profile-badge">✓ Verified Bruin</span>
-              </div>
-              <p className="profile-email">sarah.chen@ucla.edu</p>
-              <p className="profile-since">Member since September 2025</p>
-            </div>
-            <div className="profile-actions">
-              <button className="btn-edit">⚙ Edit Profile</button>
-              <button className="btn-signout">↪ Sign Out</button>
-            </div>
-          </div>
-
-          <div className="profile-stats">
-            <div className="profile-stat-card">
-              <span className="stat-value stat-gold">★ 4.9</span>
-              <span className="stat-label">Rating</span>
-            </div>
-            <div className="profile-stat-divider" />
-            <div className="profile-stat-card">
-              <span className="stat-value stat-blue">24</span>
-              <span className="stat-label">Reviews</span>
-            </div>
-            <div className="profile-stat-divider" />
-            <div className="profile-stat-card">
-              <span className="stat-value stat-blue">12</span>
-              <span className="stat-label">Items Sold</span>
-            </div>
-            <div className="profile-stat-divider" />
-            <div className="profile-stat-card">
-              <span className="stat-value stat-blue">18</span>
-              <span className="stat-label">Purchases</span>
-            </div>
-          </div>
-        </div>
+    <main className="marketplace-page">
+      {/* Search bar */}
+      <div className="marketplace-topbar">
+        <input
+          className="marketplace-search"
+          type="text"
+          placeholder="Search items..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
-      {/* Tabs */}
-      <div className="profile-tabs">
-        <button
-          className={`profile-tab${activeTab === "listings" ? " profile-tab--active" : ""}`}
-          onClick={() => setActiveTab("listings")}
-        >
-          🛍 My Listings
-          <span className="tab-count">{mockListings.length}</span>
-        </button>
-        <button
-          className={`profile-tab${activeTab === "saved" ? " profile-tab--active" : ""}`}
-          onClick={() => setActiveTab("saved")}
-        >
-          ♡ Saved Items
-          <span className="tab-count">{mockSaved.length}</span>
-        </button>
-        <button
-          className={`profile-tab${activeTab === "reviews" ? " profile-tab--active" : ""}`}
-          onClick={() => setActiveTab("reviews")}
-        >
-          ☆ Reviews
-          <span className="tab-count">{mockReviews.length}</span>
-        </button>
-      </div>
+      <div className="marketplace-body">
+        {/* Sidebar filters */}
+        <aside className="marketplace-sidebar">
+          <div className="filter-section">
+            <h3 className="filter-heading">Filters</h3>
 
-      {/* Tab Content */}
-      {activeTab === "listings" && (
-        <div className="listings-grid">
-          {mockListings.map((item) => (
-            <div key={item.id} className="listing-card">
-              <div className="listing-image-wrap">
-                <div className="listing-image-placeholder" />
-                <span className={`listing-badge listing-badge--${item.status.toLowerCase()}`}>
-                  {item.status}
-                </span>
-              </div>
-              <div className="listing-info">
-                <p className="listing-title">{item.title}</p>
-                <p className="listing-price">${item.price}</p>
-              </div>
+            {/* Category dropdown */}
+            <div className="filter-group">
+              <label className="filter-label" htmlFor="category-select">Category</label>
+              <select
+                id="category-select"
+                className="filter-select"
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+              >
+                <option value="">All Categories</option>
+                {CATEGORIES.map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </div>
-          ))}
-          <div className="listing-card listing-card--new" onClick={() => navigate("/sell")}>
-            <div className="listing-new-icon">+</div>
-            <p className="listing-new-title">List a New Item</p>
-            <p className="listing-new-sub">Start selling to fellow Bruins</p>
-          </div>
-        </div>
-      )}
 
-      {activeTab === "saved" && (
-        <div className="listings-grid">
-          {mockSaved.map((item) => (
-            <div key={item.id} className="listing-card">
-              <div className="listing-image-wrap">
-                <div className="listing-image-placeholder" />
-                <span className={`listing-badge listing-badge--${item.status.toLowerCase()}`}>
-                  {item.status}
-                </span>
+            {/* Price range */}
+            <div className="filter-group">
+              <label className="filter-label">Price Range</label>
+              <div className="price-range-display">
+                <span>${priceRange[0]}</span>
+                <span>${priceRange[1] === MAX_PRICE ? `${MAX_PRICE}+` : priceRange[1]}</span>
               </div>
-              <div className="listing-info">
-                <p className="listing-title">{item.title}</p>
-                <p className="listing-price">${item.price}</p>
+              <div className="range-track">
+                <div
+                  className="range-fill"
+                  style={{
+                    left: `${(priceRange[0] / MAX_PRICE) * 100}%`,
+                    width: `${((priceRange[1] - priceRange[0]) / MAX_PRICE) * 100}%`,
+                  }}
+                />
+                <input
+                  type="range" min={0} max={MAX_PRICE} step={5}
+                  value={priceRange[0]}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    if (v < priceRange[1]) setPriceRange([v, priceRange[1]]);
+                  }}
+                  className="range-input range-input--low"
+                />
+                <input
+                  type="range" min={0} max={MAX_PRICE} step={5}
+                  value={priceRange[1]}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    if (v > priceRange[0]) setPriceRange([priceRange[0], v]);
+                  }}
+                  className="range-input range-input--high"
+                />
               </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {activeTab === "reviews" && (
-        <div className="reviews-list">
-          <div className="reviews-summary">
-            <span className="reviews-big-score">4.9</span>
-            <div className="reviews-summary-right">
-              <div className="reviews-stars-row">{"★".repeat(5)}</div>
-              <p className="reviews-summary-label">Based on 24 reviews</p>
             </div>
           </div>
-          {mockReviews.map((r) => (
-            <div key={r.id} className="review-card">
-              <div className="review-header">
-                <div className="review-avatar" />
-                <div className="review-meta">
-                  <span className="review-reviewer">{r.reviewer}</span>
-                  <span className="review-date">{r.date}</span>
+        </aside>
+
+        {/* Items grid */}
+        <section className="marketplace-content">
+          <p className="results-count">
+            {filtered.length} {filtered.length === 1 ? "item" : "items"}
+          </p>
+
+          <div className="items-grid">
+            {filtered.map((item) => (
+              <div key={item.id} className="item-card">
+                <div className="item-placeholder">
+                  <button
+                    className={`star-btn${starred.has(item.id) ? " star-btn--active" : ""}`}
+                    onClick={(e) => toggleStar(item.id, e)}
+                    title={starred.has(item.id) ? "Remove from starred" : "Star this item"}
+                  >
+                    {starred.has(item.id) ? "★" : "☆"}
+                  </button>
+                  <span className="item-category-tag">{item.category}</span>
                 </div>
-                <div className="review-stars">{"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}</div>
+                <div className="item-info">
+                  <p className="item-title">{item.title}</p>
+                  <p className="item-price">
+                    {item.price === 0
+                      ? <span className="price-free">Free</span>
+                      : `$${item.price}`}
+                  </p>
+                  <p className="item-seller">by {item.seller}</p>
+                </div>
               </div>
-              <p className="review-comment">{r.comment}</p>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        </section>
+      </div>
     </main>
   );
 }
