@@ -1,6 +1,12 @@
 import { useState, useMemo, useRef } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import "./Marketplace.css";
+
+const UPCOMING_EVENTS = [
+  { id: 1, tag: "Flea Market",    title: "Spring Flea Market",       date: "Mar 8",  location: "Bruin Plaza" },
+  { id: 2, tag: "Farmers Market", title: "Westwood Farmers Market",  date: "Apr 26", location: "Westwood Village" },
+  { id: 3, tag: "Books & Media",  title: "Textbook Swap",            date: "May 2",  location: "Powell Library Steps" },
+];
 
 const CATEGORIES = [
   "Textbooks",
@@ -82,6 +88,24 @@ export default function Marketplace() {
             </button>
             <button className="mp-btn-secondary">Start selling →</button>
           </div>
+        </div>
+
+        <div className="mp-hero-events">
+          <div className="mp-hero-events-header">
+            <span className="mp-hero-events-label">Upcoming Events</span>
+            <Link className="mp-hero-events-link" to="/events">See all →</Link>
+          </div>
+          {UPCOMING_EVENTS.map((ev) => (
+            <div key={ev.id} className="mp-ev-card">
+              <span className="mp-ev-tag">{ev.tag}</span>
+              <p className="mp-ev-title">{ev.title}</p>
+              <div className="mp-ev-meta">
+                <span>{ev.date}</span>
+                <span className="mp-ev-dot">·</span>
+                <span>{ev.location}</span>
+              </div>
+            </div>
+          ))}
         </div>
 
       </section>

@@ -13,13 +13,88 @@
 
 .mp-hero {
   background: linear-gradient(135deg, #003B5C 0%, #2774AE 100%);
-  padding: 72px 64px;
-  display: flex;
+  padding: 40px 64px;
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 48px;
   align-items: center;
-  min-height: 420px;
+  min-height: 260px;
   position: relative;
   overflow: hidden;
 }
+
+.mp-hero-events {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 1;
+}
+
+.mp-hero-events-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2px;
+}
+
+.mp-hero-events-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.mp-hero-events-link {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ucla-gold);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.mp-hero-events-link:hover { opacity: 0.8; }
+
+.mp-ev-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background 0.15s;
+}
+
+.mp-ev-card:hover { background: rgba(255, 255, 255, 0.13); }
+
+.mp-ev-tag {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ucla-gold);
+}
+
+.mp-ev-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.mp-ev-meta {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.mp-ev-dot { opacity: 0.4; }
 
 .mp-hero::before {
   content: '';
@@ -499,6 +574,8 @@
     padding: 48px 28px;
     min-height: auto;
   }
+  .mp-hero        { grid-template-columns: 1fr; }
+  .mp-hero-events { display: none; }
   .mp-headline    { font-size: 42px; }
   .mp-cat-grid    { grid-template-columns: repeat(4, 1fr); }
   .mp-categories  { padding: 28px 24px; }
