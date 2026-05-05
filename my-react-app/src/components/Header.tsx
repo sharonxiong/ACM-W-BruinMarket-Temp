@@ -18,7 +18,7 @@ export default function Header() {
   return (
     <header className="navbar">
       <NavLink className="navbar__brand" to="/">
-        UniShop
+        UCLA Market
       </NavLink>
 
       <div className="navbar__search-wrap" style={{ visibility: isMarketplace ? "visible" : "hidden" }}>
