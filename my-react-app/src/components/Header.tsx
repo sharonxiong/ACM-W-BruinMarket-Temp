@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useSearchParams } from "react-router-dom";
+import { NavLink, Route, useLocation, useSearchParams } from "react-router-dom";
 import "./Header.css";
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -47,9 +47,13 @@ export default function Header() {
         <button className="navbar__button navbar__button--ghost" type="button">
           Sign in
         </button>
-        <button className="navbar__button" type="button">
+        
+          <NavLink className={linkClass} to="/sell">
+          <button className="navbar__button" type="button">
           Post listing
-        </button>
+          </button>
+          </NavLink>
+        
       </div>
     </header>
   );
