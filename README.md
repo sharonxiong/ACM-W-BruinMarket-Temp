@@ -1,8 +1,31 @@
 # ACM-W-BruinMarket-Temp
 
-Steps to run the project:
+## Running the Website
 
-1. cd into the my-react-app folder
-2. run "npm install" (don't have to do it everytime but it doesn't hurt to do this, it basically installs
-                    all the necessary libraries needed for the project to run.)
-3. run "npm run dev" to see the project in the browser
+> Open **two separate terminals** before starting — one for the backend, one for the frontend.
+
+---
+
+### Terminal 1 — Backend (start this first)
+
+```bash
+cd server
+npm install       # Only needed the first time
+npm run dev
+```
+
+**Success looks like:**
+```
+Connected to MongoDB → marketplace
+API listening on http://localhost:3001
+```
+
+---
+
+### Terminal 2 — Frontend
+
+```bash
+cd my-react-app   # Make sure you're in ACM-W-BruinMarket-Temp/my-react-app
+npm run dev
+```
+
