@@ -1,8 +1,9 @@
-import React from "react";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./EventsPage.css";
 
 type CommunityEvent = {
-  id: string;
+  _id: string;
   tag: string;
   title: string;
   description: string;
@@ -82,38 +83,20 @@ function EventIcon({
 }
 
 export default function CommunitiesPage() {
-  const items: CommunityEvent[] = [
-    {
-      id: "spring-flea-market",
-      tag: "Flea Market",
-      title: "Spring Flea Market",
-      description:
-        "Browse and shop from student vendors selling clothes, accessories, art, and more!",
-      dateLabel: "March 8, 2026",
-      locationLabel: "Bruin Plaza",
-      interestedCount: 234,
-    },
-    {
-      id: "farmers-market",
-      tag: "Farmers Market",
-      title: "Westwood Farmers Market",
-      description:
-        "Fresh produce, baked goods, and local vendors — grab something after class.",
-      dateLabel: "April 26, 2026",
-      locationLabel: "Westwood Village",
-      interestedCount: 412,
-    },
-    {
-      id: "textbook-swap",
-      tag: "Books & Media",
-      title: "Textbook Swap",
-      description:
-        "Trade or sell used textbooks. Meet up, compare editions, and save money.",
-      dateLabel: "May 2, 2026",
-      locationLabel: "Powell Library Steps",
-      interestedCount: 189,
-    },
-  ];
+  const [items, setItems] = useState<CommunityEvent[]>([]);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/events")
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((data: CommunityEvent[]) => { if (!cancelled) setItems(data); })
+      .catch((err) => { if (!cancelled) setLoadError(err.message); });
+    return () => { cancelled = true; };
+  }, []);
 
   return (
     <main className="communities">
@@ -124,9 +107,15 @@ export default function CommunitiesPage() {
         </p>
       </div>
 
+      {loadError && (
+        <p style={{ color: "crimson", textAlign: "center" }}>
+          Couldn't load events ({loadError}). Is the API server running?
+        </p>
+      )}
+
       <section className="communities__grid" aria-label="Community events">
         {items.map((e) => (
-          <article key={e.id} className="community-card">
+          <article key={e._id} className="community-card">
             <div className="community-card__body community-card__body--event">
               <div className="community-card__pill">{e.tag}</div>
               <h2 className="community-card__title">{e.title}</h2>
@@ -141,18 +130,26 @@ export default function CommunitiesPage() {
                   <EventIcon type="pin" title="Location" />
                   <span>{e.locationLabel}</span>
                 </div>
-                <div className="event-meta__row">
-                  <EventIcon type="users" title="Interested" />
-                  <span>{e.interestedCount} interested</span>
-                </div>
               </div>
 
-              <button className="community-card__cta" type="button">
+              <Link
+                to={`/events/${e._id}`}
+                className="community-card__cta"
+                style={{ display: "block", textAlign: "center", textDecoration: "none" }}
+              >
                 View Details
-              </button>
+              </Link>
             </div>
           </article>
         ))}
+
+        <Link to="/events/add" className="community-card community-card--add" aria-label="Add a new event">
+          <div className="community-card--add__inner">
+            <span className="community-card--add__plus">+</span>
+            <p className="community-card--add__title">Add Event</p>
+            <p className="community-card--add__sub">Post something happening on campus</p>
+          </div>
+        </Link>
       </section>
     </main>
   );

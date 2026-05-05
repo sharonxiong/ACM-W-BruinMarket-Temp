@@ -9,18 +9,51 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [status, setStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-  };
-
-  const handleCancel = () => {
+  const resetForm = () => {
     setTitle("");
     setCategory("");
     setCondition("");
     setPrice("");
     setPickupLocation("");
     setDescription("");
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setStatus(null);
+    try {
+      const res = await fetch("/api/listings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          category,
+          condition,
+          price: Number(price),
+          pickupLocation,
+          description,
+        }),
+      });
+      if (!res.ok) {
+        const { error } = await res.json().catch(() => ({ error: `HTTP ${res.status}` }));
+        throw new Error(error);
+      }
+      setStatus({ kind: "ok", msg: "Listing posted!" });
+      resetForm();
+    } catch (err) {
+      setStatus({ kind: "err", msg: err instanceof Error ? err.message : "Something went wrong" });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCancel = () => {
+    resetForm();
+    setStatus(null);
   };
 
   return (
@@ -169,13 +202,19 @@ export default function SellPage() {
 
         {/* Buttons */}
         <div className="form-actions">
-          <button type="submit" className="btn btn--primary">
-            List Item
+          <button type="submit" className="btn btn--primary" disabled={submitting}>
+            {submitting ? "Posting…" : "List Item"}
           </button>
-          <button type="button" className="btn btn--secondary" onClick={handleCancel}>
+          <button type="button" className="btn btn--secondary" onClick={handleCancel} disabled={submitting}>
             Cancel
           </button>
         </div>
+
+        {status && (
+          <p style={{ marginTop: 12, color: status.kind === "ok" ? "green" : "crimson" }}>
+            {status.msg}
+          </p>
+        )}
       </form>
     </main>
   );

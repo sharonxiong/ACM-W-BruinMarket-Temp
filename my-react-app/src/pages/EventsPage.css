@@ -42,6 +42,8 @@
   border: 1.5px solid var(--border);
   border-radius: 0;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 @media (min-width: 700px) {
@@ -58,6 +60,9 @@
 
 .community-card__body {
   padding: 20px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .community-card__pill {
@@ -121,7 +126,7 @@
 }
 
 .community-card__cta {
-  margin-top: 20px;
+  margin-top: auto;
   width: 100%;
   border: none;
   border-radius: 0;
@@ -142,6 +147,66 @@
 
 .community-card__cta:active {
   transform: translateY(1px);
+}
+
+/* Add-event tile (matches event card box, gray + dashed) */
+.community-card--add {
+  background: #F4F6F9;
+  border: 1.5px dashed rgba(17, 24, 39, 0.22);
+  text-decoration: none;
+  color: rgba(17, 24, 39, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.community-card--add:hover {
+  background: #EBEEF3;
+  border-color: var(--ucla-blue);
+  color: var(--ucla-blue-dark);
+}
+
+.community-card--add__inner {
+  text-align: center;
+  padding: 24px;
+}
+
+.community-card--add__plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(17, 24, 39, 0.06);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1;
+  color: inherit;
+}
+
+.community-card--add:hover .community-card--add__plus {
+  background: rgba(39, 116, 174, 0.12);
+}
+
+.community-card--add__title {
+  margin: 14px 0 4px 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: inherit;
+}
+
+.community-card--add__sub {
+  margin: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 13px;
+  color: rgba(17, 24, 39, 0.5);
 }
 
 @media (max-width: 1100px) {
