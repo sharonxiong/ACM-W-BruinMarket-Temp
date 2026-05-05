@@ -1,0 +1,185 @@
+.signin-page {
+  min-height: calc(100vh - 57px);
+  background: #F4F6F9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+}
+
+.signin-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  overflow: hidden;
+}
+
+.signin-card__accent {
+  height: 4px;
+  background: linear-gradient(90deg, var(--ucla-blue-dark) 0%, var(--ucla-blue) 100%);
+}
+
+.signin-card__body {
+  padding: 36px 40px 40px;
+}
+
+.signin-eyebrow {
+  display: inline-block;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--ucla-blue);
+  background: rgba(39, 116, 174, 0.1);
+  padding: 5px 13px;
+  margin-bottom: 20px;
+}
+
+.signin-heading {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text-h);
+  letter-spacing: -0.5px;
+  margin: 0 0 8px;
+}
+
+.signin-subtext {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: rgba(17, 24, 39, 0.6);
+  margin: 0 0 32px;
+}
+
+.signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.signin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.signin-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.signin-label {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #aaa;
+}
+
+.signin-forgot {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ucla-blue);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.signin-forgot:hover {
+  opacity: 0.75;
+}
+
+.signin-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 0;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: var(--text-h);
+  background: white;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  appearance: none;
+}
+
+.signin-input::placeholder {
+  color: #bbb;
+}
+
+.signin-input:focus {
+  outline: none;
+  border-color: var(--ucla-blue);
+}
+
+.signin-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--ucla-gold);
+  color: #111;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 14px rgba(255, 209, 0, 0.35);
+  margin-top: 4px;
+}
+
+.signin-btn:hover {
+  background: var(--ucla-gold-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(255, 209, 0, 0.4);
+}
+
+.signin-btn:active {
+  transform: translateY(0);
+}
+
+.signin-divider {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0 24px;
+}
+
+.signin-divider__line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.signin-divider__text {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.signin-signup {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: rgba(17, 24, 39, 0.6);
+  text-align: center;
+  margin: 0;
+}
+
+.signin-signup__link {
+  font-weight: 700;
+  color: var(--ucla-blue);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.signin-signup__link:hover {
+  opacity: 0.75;
+}
