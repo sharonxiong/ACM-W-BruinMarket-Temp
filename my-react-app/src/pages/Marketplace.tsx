@@ -2,11 +2,13 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import "./Marketplace.css";
 
-const UPCOMING_EVENTS = [
-  { id: 1, tag: "Flea Market",    title: "Spring Flea Market",       date: "Mar 8",  location: "Bruin Plaza" },
-  { id: 2, tag: "Farmers Market", title: "Westwood Farmers Market",  date: "Apr 26", location: "Westwood Village" },
-  { id: 3, tag: "Books & Media",  title: "Textbook Swap",            date: "May 2",  location: "Powell Library Steps" },
-];
+type EventCard = {
+  _id: string;
+  tag: string;
+  title: string;
+  dateLabel: string;
+  locationLabel: string;
+};
 
 const CATEGORIES = [
   "Textbooks",
@@ -37,6 +39,7 @@ export default function Marketplace() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
   const [starred, setStarred]       = useState<Set<string>>(new Set());
   const [items, setItems]           = useState<Listing[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<EventCard[]>([]);
   const [loadError, setLoadError]   = useState<string | null>(null);
   const listingsRef = useRef<HTMLElement>(null);
 
@@ -49,6 +52,12 @@ export default function Marketplace() {
       })
       .then((data: Listing[]) => { if (!cancelled) setItems(data); })
       .catch((err) => { if (!cancelled) setLoadError(err.message); });
+
+    fetch("/api/events")
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: EventCard[]) => { if (!cancelled) setUpcomingEvents(data.slice(0, 3)); })
+      .catch(() => {});
+
     return () => { cancelled = true; };
   }, []);
 
@@ -103,14 +112,14 @@ export default function Marketplace() {
             <span className="mp-hero-events-label">Upcoming Events</span>
             <Link className="mp-hero-events-link" to="/events">See all →</Link>
           </div>
-          {UPCOMING_EVENTS.map((ev) => (
-            <div key={ev.id} className="mp-ev-card">
+          {upcomingEvents.map((ev) => (
+            <div key={ev._id} className="mp-ev-card">
               <span className="mp-ev-tag">{ev.tag}</span>
               <p className="mp-ev-title">{ev.title}</p>
               <div className="mp-ev-meta">
-                <span>{ev.date}</span>
+                <span>{ev.dateLabel}</span>
                 <span className="mp-ev-dot">·</span>
-                <span>{ev.location}</span>
+                <span>{ev.locationLabel}</span>
               </div>
             </div>
           ))}
