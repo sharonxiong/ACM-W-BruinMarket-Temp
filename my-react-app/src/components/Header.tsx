@@ -1,4 +1,6 @@
+
 import { NavLink, Route, useLocation, useSearchParams } from "react-router-dom";
+
 import "./Header.css";
 
 const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -7,6 +9,7 @@ const linkClass = ({ isActive }: { isActive: boolean }) =>
 export default function Header() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const isMarketplace = pathname === "/marketplace";
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +21,7 @@ export default function Header() {
   return (
     <header className="navbar">
       <NavLink className="navbar__brand" to="/">
-        UniShop
+        UCLA Market
       </NavLink>
 
       <div className="navbar__search-wrap" style={{ visibility: isMarketplace ? "visible" : "hidden" }}>
@@ -44,7 +47,7 @@ export default function Header() {
       </nav>
 
       <div className="navbar__actions">
-        <button className="navbar__button navbar__button--ghost" type="button">
+        <button className="navbar__button navbar__button--ghost" type="button" onClick={() => navigate("/signin")}>
           Sign in
         </button>
         
