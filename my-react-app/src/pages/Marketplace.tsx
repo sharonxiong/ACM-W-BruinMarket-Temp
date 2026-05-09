@@ -1,12 +1,14 @@
-import { useState, useMemo, useRef } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
 import "./Marketplace.css";
 
-const UPCOMING_EVENTS = [
-  { id: 1, tag: "Flea Market",    title: "Spring Flea Market",       date: "Mar 8",  location: "Bruin Plaza" },
-  { id: 2, tag: "Farmers Market", title: "Westwood Farmers Market",  date: "Apr 26", location: "Westwood Village" },
-  { id: 3, tag: "Books & Media",  title: "Textbook Swap",            date: "May 2",  location: "Powell Library Steps" },
-];
+type EventCard = {
+  _id: string;
+  tag: string;
+  title: string;
+  dateLabel: string;
+  locationLabel: string;
+};
 
 const CATEGORIES = [
   "Textbooks",
@@ -21,20 +23,13 @@ const CATEGORIES = [
 
 const MAX_PRICE = 500;
 
-const mockItems = [
-  { id: 1,  title: "Modern Desk Lamp",            price: 25,  category: "Dorm Supplies",    seller: "Sarah C."  },
-  { id: 2,  title: "Calculus Textbook (8th Ed.)", price: 40,  category: "Textbooks",         seller: "James L."  },
-  { id: 3,  title: "Vintage Backpack",             price: 30,  category: "Clothing",          seller: "Mia T."    },
-  { id: 4,  title: "Standing Desk",                price: 120, category: "Furniture",         seller: "Kevin R."  },
-  { id: 5,  title: "MacBook Pro Charger",          price: 35,  category: "Electronics",       seller: "Priya S."  },
-  { id: 6,  title: "Trek Mountain Bike",           price: 280, category: "Bikes & Scooters",  seller: "Daniel W." },
-  { id: 7,  title: "IKEA Desk Chair",              price: 55,  category: "Furniture",         seller: "Anna K."   },
-  { id: 8,  title: "Free Moving Boxes",            price: 0,   category: "Free Stuff",        seller: "Chris M."  },
-  { id: 9,  title: "Python Programming Book",      price: 20,  category: "Textbooks",         seller: "Lily H."   },
-  { id: 10, title: "Noise-Cancelling Headphones",  price: 90,  category: "Electronics",       seller: "Omar N."   },
-  { id: 11, title: "Mini Fridge",                  price: 75,  category: "Dorm Supplies",     seller: "Jen B."    },
-  { id: 12, title: "UCLA Hoodie (M)",              price: 18,  category: "Clothing",          seller: "Tyler S."  },
-];
+type Listing = {
+  _id: string;
+  title: string;
+  price: number;
+  category: string;
+  seller: string;
+};
 
 export default function Marketplace() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,13 +37,34 @@ export default function Marketplace() {
   const search = searchParams.get("q") ?? "";
   const [category, setCategory]     = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, MAX_PRICE]);
-  const [starred, setStarred]       = useState<Set<number>>(new Set());
+  const [starred, setStarred]       = useState<Set<string>>(new Set());
+  const [items, setItems]           = useState<Listing[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<EventCard[]>([]);
+  const [loadError, setLoadError]   = useState<string | null>(null);
   const listingsRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/listings")
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.json();
+      })
+      .then((data: Listing[]) => { if (!cancelled) setItems(data); })
+      .catch((err) => { if (!cancelled) setLoadError(err.message); });
+
+    fetch("/api/events")
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: EventCard[]) => { if (!cancelled) setUpcomingEvents(data.slice(0, 3)); })
+      .catch(() => {});
+
+    return () => { cancelled = true; };
+  }, []);
 
   const scrollToListings = () =>
     listingsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
 
-  const toggleStar = (id: number, e: React.MouseEvent) => {
+  const toggleStar = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
     setStarred((prev) => {
       const next = new Set(prev);
@@ -58,13 +74,14 @@ export default function Marketplace() {
   };
 
   const filtered = useMemo(() =>
-    mockItems.filter((i) => {
+    items.filter((i) => {
       const q = search.toLowerCase().trim();
       const matchesSearch = !q || i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q);
       const matchesCategory = !category || i.category === category;
-      return matchesSearch && matchesCategory;
+      const matchesPrice = i.price >= priceRange[0] && (priceRange[1] === MAX_PRICE || i.price <= priceRange[1]);
+      return matchesSearch && matchesCategory && matchesPrice;
     }),
-    [search, category]
+    [items, search, category, priceRange]
   );
 
   return (
@@ -95,14 +112,14 @@ export default function Marketplace() {
             <span className="mp-hero-events-label">Upcoming Events</span>
             <Link className="mp-hero-events-link" to="/events">See all →</Link>
           </div>
-          {UPCOMING_EVENTS.map((ev) => (
-            <div key={ev.id} className="mp-ev-card">
+          {upcomingEvents.map((ev) => (
+            <div key={ev._id} className="mp-ev-card">
               <span className="mp-ev-tag">{ev.tag}</span>
               <p className="mp-ev-title">{ev.title}</p>
               <div className="mp-ev-meta">
-                <span>{ev.date}</span>
+                <span>{ev.dateLabel}</span>
                 <span className="mp-ev-dot">·</span>
-                <span>{ev.location}</span>
+                <span>{ev.locationLabel}</span>
               </div>
             </div>
           ))}
@@ -208,7 +225,11 @@ export default function Marketplace() {
 
           {/* Grid */}
           <div className="mp-grid">
-            {filtered.length === 0 ? (
+            {loadError ? (
+              <div className="mp-empty">
+                <p>Couldn't load listings ({loadError}). Is the API server running on port 3001?</p>
+              </div>
+            ) : filtered.length === 0 ? (
               <div className="mp-empty">
                 <p>No items match your search.</p>
                 <button className="mp-clear-btn" onClick={() => { setCategory(""); clearSearch(); }}>
@@ -217,7 +238,7 @@ export default function Marketplace() {
               </div>
             ) : (
               filtered.map((item) => (
-                <div key={item.id} className="mp-card">
+                <div key={item._id} className="mp-card">
                   <div className="mp-card-img" />
                   <span className="mp-card-time">recently</span>
                   <div className="mp-card-body">
@@ -233,11 +254,11 @@ export default function Marketplace() {
                           : `$${item.price}`}
                       </span>
                       <button
-                        className={`mp-heart${starred.has(item.id) ? " mp-heart--on" : ""}`}
-                        onClick={(e) => toggleStar(item.id, e)}
-                        title={starred.has(item.id) ? "Unsave" : "Save"}
+                        className={`mp-heart${starred.has(item._id) ? " mp-heart--on" : ""}`}
+                        onClick={(e) => toggleStar(item._id, e)}
+                        title={starred.has(item._id) ? "Unsave" : "Save"}
                       >
-                        <svg viewBox="0 0 24 24" fill={starred.has(item.id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" fill={starred.has(item._id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
                           <path d="M12 21C12 21 3 14.5 3 8.5C3 5.42 5.42 3 8.5 3C10.24 3 11.91 3.81 13 5.08C14.09 3.81 15.76 3 17.5 3C20.58 3 23 5.42 23 8.5C23 14.5 14 21 12 21Z" strokeLinecap="round" strokeLinejoin="round"/>
                         </svg>
                       </button>
