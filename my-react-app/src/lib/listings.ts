@@ -1,3 +1,27 @@
+export type Category = { slug: string; label: string };
+
+export const CATEGORIES: Category[] = [
+  { slug: "books", label: "Textbooks" },
+  { slug: "electronics", label: "Electronics" },
+  { slug: "furniture", label: "Furniture" },
+  { slug: "clothing", label: "Clothing" },
+  { slug: "dorm-essentials", label: "Dorm Supplies" },
+  { slug: "appliances", label: "Appliances" },
+  { slug: "bikes", label: "Bikes & Scooters" },
+  { slug: "free", label: "Free Stuff" },
+  { slug: "other", label: "Other" },
+];
+
+const CATEGORY_LABELS: Record<string, string> = Object.fromEntries(
+  CATEGORIES.map((c) => [c.slug, c.label])
+);
+
+export function prettyCategory(slug: string | null | undefined): string {
+  if (!slug) return "Other";
+  if (CATEGORY_LABELS[slug]) return CATEGORY_LABELS[slug];
+  return slug.replace(/[-_]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+}
+
 export const PICKUP_LABELS: Record<string, string> = {
   powell: "Powell Library",
   yrl: "Young Research Library",

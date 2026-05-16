@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { getProfileName } from "../lib/listings";
+import { CATEGORIES, getProfileName } from "../lib/listings";
 import "./SellPage.css";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB
@@ -170,13 +170,9 @@ export default function SellPage() {
             required
           >
             <option value="">Select a category</option>
-            <option value="furniture">Furniture</option>
-            <option value="books">Books</option>
-            <option value="electronics">Electronics</option>
-            <option value="dorm-essentials">Dorm Essentials</option>
-            <option value="clothing">Clothing</option>
-            <option value="appliances">Appliances</option>
-            <option value="other">Other</option>
+            {CATEGORIES.map((cat) => (
+              <option key={cat.slug} value={cat.slug}>{cat.label}</option>
+            ))}
           </select>
         </div>
 

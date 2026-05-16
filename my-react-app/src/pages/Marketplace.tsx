@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
-import { displaySeller, prettyPickup } from "../lib/listings";
+import { CATEGORIES, displaySeller, prettyCategory, prettyPickup } from "../lib/listings";
 import "./Marketplace.css";
 
 type EventCard = {
@@ -10,17 +10,6 @@ type EventCard = {
   dateLabel: string;
   locationLabel: string;
 };
-
-const CATEGORIES = [
-  "Textbooks",
-  "Electronics",
-  "Furniture",
-  "Clothing",
-  "Dorm Supplies",
-  "Bikes & Scooters",
-  "Free Stuff",
-];
-
 
 const MAX_PRICE = 500;
 
@@ -81,7 +70,12 @@ export default function Marketplace() {
   const filtered = useMemo(() =>
     items.filter((i) => {
       const q = search.toLowerCase().trim();
-      const matchesSearch = !q || i.title.toLowerCase().includes(q) || i.category.toLowerCase().includes(q);
+      const categoryLabel = prettyCategory(i.category).toLowerCase();
+      const matchesSearch =
+        !q ||
+        i.title.toLowerCase().includes(q) ||
+        i.category.toLowerCase().includes(q) ||
+        categoryLabel.includes(q);
       const matchesCategory = !category || i.category === category;
       const matchesPrice = i.price >= priceRange[0] && (priceRange[1] === MAX_PRICE || i.price <= priceRange[1]);
       return matchesSearch && matchesCategory && matchesPrice;
@@ -138,11 +132,11 @@ export default function Marketplace() {
         <div className="mp-cat-grid">
           {CATEGORIES.map((cat) => (
             <button
-              key={cat}
-              className={`mp-cat-tile${category === cat ? " mp-cat-tile--active" : ""}`}
-              onClick={() => { setCategory(cat === category ? "" : cat); scrollToListings(); }}
+              key={cat.slug}
+              className={`mp-cat-tile${category === cat.slug ? " mp-cat-tile--active" : ""}`}
+              onClick={() => { setCategory(cat.slug === category ? "" : cat.slug); scrollToListings(); }}
             >
-              <span className="mp-cat-name">{cat}</span>
+              <span className="mp-cat-name">{cat.label}</span>
             </button>
           ))}
         </div>
@@ -153,7 +147,7 @@ export default function Marketplace() {
         <div className="mp-listings-header">
           <div className="mp-listings-title-row">
             <h2 className="mp-section-heading mp-section-heading--flush">
-              {category || "All Listings"}
+              {category ? prettyCategory(category) : "All Listings"}
             </h2>
             <span className="mp-listing-count">
               {filtered.length} {filtered.length === 1 ? "item" : "items"}
@@ -177,7 +171,7 @@ export default function Marketplace() {
                 >
                   <option value="">All Categories</option>
                   {CATEGORIES.map((cat) => (
-                    <option key={cat} value={cat}>{cat}</option>
+                    <option key={cat.slug} value={cat.slug}>{cat.label}</option>
                   ))}
                 </select>
               </div>
@@ -261,7 +255,7 @@ export default function Marketplace() {
                     <p className="mp-card-title">{item.title}</p>
                     <div className="mp-card-brand-row">
                       <span className="mp-card-brand">{displaySeller(item)}</span>
-                      <span className="mp-card-category">{item.category}</span>
+                      <span className="mp-card-category">{prettyCategory(item.category)}</span>
                     </div>
                     <div className="mp-card-footer">
                       <span className="mp-card-price">

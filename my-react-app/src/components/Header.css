@@ -54,13 +54,19 @@
 }
 
 .navbar__brand {
-  font-family: 'Bricolage Grotesque', sans-serif;
-  font-weight: 800;
-  font-weight: 400;
-  font-size: 24px;
+  display: inline-flex;
+  align-items: center;
+  background: white;
+  padding: 4px 12px;
+  border-radius: 8px;
   text-decoration: none;
-  color: white;
-  letter-spacing: 0.5px;
+  line-height: 0;
+}
+
+.navbar__logo {
+  height: 40px;
+  width: auto;
+  display: block;
 }
 
 .navbar__links {

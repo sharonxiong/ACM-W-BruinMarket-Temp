@@ -20,8 +20,8 @@ export default function Header() {
 
   return (
     <header className="navbar">
-      <NavLink className="navbar__brand" to="/">
-        UCLA Market
+      <NavLink className="navbar__brand" to="/" aria-label="Bruin Market home">
+        <img src="/logo.svg" alt="Bruin Market" className="navbar__logo" />
       </NavLink>
 
       <div className="navbar__search-wrap" style={{ visibility: isMarketplace ? "visible" : "hidden" }}>
