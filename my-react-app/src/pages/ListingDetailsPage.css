@@ -1,0 +1,135 @@
+.listing-detail {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.listing-detail__header {
+  margin-bottom: 16px;
+}
+
+.listing-detail__back {
+  color: var(--ucla-blue);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.listing-detail__back:hover {
+  text-decoration: underline;
+}
+
+.listing-detail__loading,
+.listing-detail__missing,
+.listing-detail__error {
+  margin: 24px 0;
+  color: var(--text);
+}
+
+.listing-detail__error {
+  color: crimson;
+}
+
+.listing-detail__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 800px) {
+  .listing-detail__body {
+    grid-template-columns: 1fr;
+  }
+}
+
+.listing-detail__image-wrap {
+  background: #f4f4f4;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 1 / 1;
+}
+
+.listing-detail__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.listing-detail__info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.listing-detail__pill {
+  align-self: flex-start;
+  background: rgba(39, 116, 174, 0.1);
+  color: var(--ucla-blue);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.listing-detail__title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--ucla-blue);
+}
+
+.listing-detail__price {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text);
+}
+
+.listing-detail__facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.listing-detail__fact {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.listing-detail__fact-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.listing-detail__fact-value {
+  font-size: 15px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.listing-detail__section-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.listing-detail__description {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text);
+  white-space: pre-wrap;
+}

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getProfileName, setProfileName } from "../lib/listings";
 import "./ProfilePage.css";
 
 const mockListings = [
@@ -19,7 +20,16 @@ type Tab = "listings" | "saved";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<Tab>("listings");
+  const [name, setName] = useState<string>(getProfileName);
+  const [editingName, setEditingName] = useState(false);
   const navigate = useNavigate();
+
+  const saveName = () => {
+    const trimmed = name.trim();
+    if (trimmed) setProfileName(trimmed);
+    else setName(getProfileName());
+    setEditingName(false);
+  };
 
   return (
     <main className="profile-page">
@@ -33,12 +43,29 @@ export default function ProfilePage() {
         <div className="profile-body">
           <div className="profile-header-row">
             <div>
-              <h2 className="profile-name">Sarah Chen</h2>
+              {editingName ? (
+                <input
+                  className="profile-name"
+                  value={name}
+                  autoFocus
+                  onChange={(e) => setName(e.target.value)}
+                  onBlur={saveName}
+                  onKeyDown={(e) => { if (e.key === "Enter") saveName(); }}
+                />
+              ) : (
+                <h2 className="profile-name">{name}</h2>
+              )}
               <p className="profile-email">sarah.chen@ucla.edu</p>
               <p className="profile-since">Member since September 2025</p>
             </div>
             <div className="profile-actions">
-              <button className="btn-edit" type="button">Edit Profile</button>
+              <button
+                className="btn-edit"
+                type="button"
+                onClick={() => setEditingName((v) => !v)}
+              >
+                {editingName ? "Done" : "Edit Profile"}
+              </button>
               <button className="btn-signout" type="button">Sign Out</button>
             </div>
           </div>

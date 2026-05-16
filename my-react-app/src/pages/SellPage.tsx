@@ -1,5 +1,16 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { getProfileName } from "../lib/listings";
 import "./SellPage.css";
+
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB
+
+const readFileAsDataUrl = (file: File): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error ?? new Error("Could not read file"));
+    reader.readAsDataURL(file);
+  });
 
 export default function SellPage() {
   // variables used by useState to give the current value and function to update it
@@ -9,8 +20,10 @@ export default function SellPage() {
   const [price, setPrice] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [image, setImage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<{ kind: "ok" | "err"; msg: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const resetForm = () => {
     setTitle("");
@@ -19,6 +32,35 @@ export default function SellPage() {
     setPrice("");
     setPickupLocation("");
     setDescription("");
+    setImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      setStatus({ kind: "err", msg: "Please choose an image file" });
+      e.target.value = "";
+      return;
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      setStatus({ kind: "err", msg: "Image must be 5 MB or smaller" });
+      e.target.value = "";
+      return;
+    }
+    try {
+      const dataUrl = await readFileAsDataUrl(file);
+      setImage(dataUrl);
+      setStatus(null);
+    } catch {
+      setStatus({ kind: "err", msg: "Could not read that image" });
+    }
+  };
+
+  const removeImage = () => {
+    setImage(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,6 +78,8 @@ export default function SellPage() {
           price: Number(price),
           pickupLocation,
           description,
+          image,
+          seller: getProfileName(),
         }),
       });
       if (!res.ok) {
@@ -64,15 +108,36 @@ export default function SellPage() {
       </div>
 
       <form className="sell-form" onSubmit={handleSubmit}>
-        {/* Photos */}
+        {/* Photo */}
         <div className="form-field">
-          <label className="form-label">Photos</label>
-          <p className="form-hint">Add up to 5 photos</p>
+          <label className="form-label">Photo</label>
+          <p className="form-hint">Optional — a default image is used if none is provided (max 5 MB)</p>
           <div className="photo-grid">
-            <div className="photo-upload">
-              <span className="photo-upload__icon">↑</span>
-              <span className="photo-upload__text">Upload Photo</span>
-            </div>
+            {image ? (
+              <div className="photo-preview">
+                <img src={image} alt="Listing preview" />
+                <button
+                  type="button"
+                  className="photo-remove"
+                  onClick={removeImage}
+                  aria-label="Remove photo"
+                >
+                  ×
+                </button>
+              </div>
+            ) : (
+              <label className="photo-upload">
+                <span className="photo-upload__icon">↑</span>
+                <span className="photo-upload__text">Upload Photo</span>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+              </label>
+            )}
           </div>
         </div>
 

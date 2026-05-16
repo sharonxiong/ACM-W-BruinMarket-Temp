@@ -454,10 +454,18 @@
 
 .mp-card:hover { opacity: 0.85; }
 
+.mp-card--link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
 .mp-card-img {
   aspect-ratio: 3 / 4;
   background: #d9d9d9;
   width: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .mp-card-time {

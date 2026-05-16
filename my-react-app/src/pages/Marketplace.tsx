@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { useSearchParams, Link } from "react-router-dom";
+import { displaySeller, prettyPickup } from "../lib/listings";
 import "./Marketplace.css";
 
 type EventCard = {
@@ -29,7 +30,11 @@ type Listing = {
   price: number;
   category: string;
   seller: string;
+  pickupLocation?: string;
+  image?: string | null;
 };
+
+const DEFAULT_LISTING_IMAGE = "/no-photo.svg";
 
 export default function Marketplace() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -238,13 +243,24 @@ export default function Marketplace() {
               </div>
             ) : (
               filtered.map((item) => (
-                <div key={item._id} className="mp-card">
-                  <div className="mp-card-img" />
+                <Link
+                  key={item._id}
+                  to={`/listings/${item._id}`}
+                  className="mp-card mp-card--link"
+                >
+                  <img
+                    className="mp-card-img"
+                    src={item.image || DEFAULT_LISTING_IMAGE}
+                    alt={item.title}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src = DEFAULT_LISTING_IMAGE;
+                    }}
+                  />
                   <span className="mp-card-time">recently</span>
                   <div className="mp-card-body">
                     <p className="mp-card-title">{item.title}</p>
                     <div className="mp-card-brand-row">
-                      <span className="mp-card-brand">{item.seller}</span>
+                      <span className="mp-card-brand">{displaySeller(item)}</span>
                       <span className="mp-card-category">{item.category}</span>
                     </div>
                     <div className="mp-card-footer">
@@ -255,7 +271,7 @@ export default function Marketplace() {
                       </span>
                       <button
                         className={`mp-heart${starred.has(item._id) ? " mp-heart--on" : ""}`}
-                        onClick={(e) => toggleStar(item._id, e)}
+                        onClick={(e) => { e.preventDefault(); toggleStar(item._id, e); }}
                         title={starred.has(item._id) ? "Unsave" : "Save"}
                       >
                         <svg viewBox="0 0 24 24" fill={starred.has(item._id) ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.75" aria-hidden="true">
@@ -263,9 +279,9 @@ export default function Marketplace() {
                         </svg>
                       </button>
                     </div>
-                    <span className="mp-card-location">UCLA Campus</span>
+                    <span className="mp-card-location">{prettyPickup(item.pickupLocation)}</span>
                   </div>
-                </div>
+                </Link>
               ))
             )}
           </div>
