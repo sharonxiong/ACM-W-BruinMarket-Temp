@@ -1,4 +1,6 @@
 # ACM-W-BruinMarket
+## Live Site
+https://bruinmarketacmw.vercel.app/ 
 
 ## Running the Website
 
