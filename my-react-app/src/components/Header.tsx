@@ -1,5 +1,5 @@
 
-import { NavLink, Route, useLocation, useSearchParams } from "react-router-dom";
+import { NavLink, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 import "./Header.css";
 
