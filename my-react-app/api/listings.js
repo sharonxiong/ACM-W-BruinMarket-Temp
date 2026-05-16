@@ -1,5 +1,7 @@
 import { getDb } from "../lib/db.js";
 
+const DEFAULT_LISTING_IMAGE = "/no-photo.svg";
+
 export default async function handler(req, res) {
   try {
     const db = await getDb();
@@ -11,7 +13,7 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST") {
-      const { title, category, condition, price, pickupLocation, description, seller } = req.body ?? {};
+      const { title, category, condition, price, pickupLocation, description, seller, image } = req.body ?? {};
 
       if (!title || !category || !condition || price == null || !pickupLocation || !description) {
         return res.status(400).json({ error: "Missing required fields" });
@@ -22,6 +24,14 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: "Price must be a non-negative number" });
       }
 
+      let imageValue = DEFAULT_LISTING_IMAGE;
+      if (image != null && image !== "") {
+        if (typeof image !== "string" || !image.startsWith("data:image/")) {
+          return res.status(400).json({ error: "Image must be a data: URL of an image" });
+        }
+        imageValue = image;
+      }
+
       const doc = {
         title: String(title).trim(),
         category: String(category),
@@ -30,6 +40,7 @@ export default async function handler(req, res) {
         pickupLocation: String(pickupLocation),
         description: String(description).trim(),
         seller: seller ? String(seller).trim() : "Anonymous Bruin",
+        image: imageValue,
         createdAt: new Date(),
       };
 

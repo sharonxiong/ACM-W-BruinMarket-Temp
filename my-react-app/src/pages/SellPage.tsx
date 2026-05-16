@@ -2,7 +2,7 @@ import React, { useRef, useState } from "react";
 import { CATEGORIES, getProfileName } from "../lib/listings";
 import "./SellPage.css";
 
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024; // 5 MB
+const MAX_IMAGE_BYTES = 3 * 1024 * 1024; // 3 MB (base64 inflates ~33%, must stay under Vercel's 4.5MB body limit)
 
 const readFileAsDataUrl = (file: File): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -45,7 +45,7 @@ export default function SellPage() {
       return;
     }
     if (file.size > MAX_IMAGE_BYTES) {
-      setStatus({ kind: "err", msg: "Image must be 5 MB or smaller" });
+      setStatus({ kind: "err", msg: "Image must be 3 MB or smaller" });
       e.target.value = "";
       return;
     }
@@ -111,7 +111,7 @@ export default function SellPage() {
         {/* Photo */}
         <div className="form-field">
           <label className="form-label">Photo</label>
-          <p className="form-hint">Optional — a default image is used if none is provided (max 5 MB)</p>
+          <p className="form-hint">Optional — a default image is used if none is provided (max 3 MB)</p>
           <div className="photo-grid">
             {image ? (
               <div className="photo-preview">
