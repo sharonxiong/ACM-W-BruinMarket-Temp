@@ -9,6 +9,7 @@ import AddEventPage from "./pages/AddEventPage";
 import EventDetailsPage from "./pages/EventDetailsPage";
 import SellPage from "./pages/SellPage";
 import ProfilePage from "./pages/ProfilePage";
+import SignInPage from "./pages/SignInPage";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
         <Route path="/events/:id" element={<EventDetailsPage />} />
         <Route path="/sell" element={<SellPage />} />
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/signin" element={<SignInPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       <Footer />

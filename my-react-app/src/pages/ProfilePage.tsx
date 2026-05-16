@@ -15,31 +15,7 @@ const mockSaved = [
   { id: 7, title: "Yoga Mat", price: 18, status: "Active" },
 ];
 
-const mockReviews = [
-  {
-    id: 1,
-    reviewer: "Alex K.",
-    rating: 5,
-    comment: "Great seller, item exactly as described! Packaged carefully and responded super fast.",
-    date: "March 2026",
-  },
-  {
-    id: 2,
-    reviewer: "Mia L.",
-    rating: 5,
-    comment: "Smooth transaction and Sarah was very communicative. Would definitely buy from her again!",
-    date: "February 2026",
-  },
-  {
-    id: 3,
-    reviewer: "Jordan T.",
-    rating: 4,
-    comment: "Good condition overall, minor wear not mentioned but totally fair for the price.",
-    date: "January 2026",
-  },
-];
-
-type Tab = "listings" | "saved" | "reviews";
+type Tab = "listings" | "saved";
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState<Tab>("listings");
@@ -50,39 +26,24 @@ export default function ProfilePage() {
 
       {/* Profile Card */}
       <div className="profile-card">
-        <div className="profile-banner">
-          <div className="profile-avatar-wrap">
-            <div className="profile-avatar" />
-          </div>
+        <div className="profile-avatar-wrap">
+          <div className="profile-avatar" />
         </div>
 
         <div className="profile-body">
           <div className="profile-header-row">
             <div>
-              <div className="profile-name-row">
-                <h2 className="profile-name">Sarah Chen</h2>
-                <span className="profile-badge">✓ Verified Bruin</span>
-              </div>
+              <h2 className="profile-name">Sarah Chen</h2>
               <p className="profile-email">sarah.chen@ucla.edu</p>
               <p className="profile-since">Member since September 2025</p>
             </div>
             <div className="profile-actions">
-              <button className="btn-edit">⚙ Edit Profile</button>
-              <button className="btn-signout">↪ Sign Out</button>
+              <button className="btn-edit" type="button">Edit Profile</button>
+              <button className="btn-signout" type="button">Sign Out</button>
             </div>
           </div>
 
           <div className="profile-stats">
-            <div className="profile-stat-card">
-              <span className="stat-value stat-gold">★ 4.9</span>
-              <span className="stat-label">Rating</span>
-            </div>
-            <div className="profile-stat-divider" />
-            <div className="profile-stat-card">
-              <span className="stat-value stat-blue">24</span>
-              <span className="stat-label">Reviews</span>
-            </div>
-            <div className="profile-stat-divider" />
             <div className="profile-stat-card">
               <span className="stat-value stat-blue">12</span>
               <span className="stat-label">Items Sold</span>
@@ -102,22 +63,15 @@ export default function ProfilePage() {
           className={`profile-tab${activeTab === "listings" ? " profile-tab--active" : ""}`}
           onClick={() => setActiveTab("listings")}
         >
-          🛍 My Listings
+          My Listings
           <span className="tab-count">{mockListings.length}</span>
         </button>
         <button
           className={`profile-tab${activeTab === "saved" ? " profile-tab--active" : ""}`}
           onClick={() => setActiveTab("saved")}
         >
-          ♡ Saved Items
+          Saved Items
           <span className="tab-count">{mockSaved.length}</span>
-        </button>
-        <button
-          className={`profile-tab${activeTab === "reviews" ? " profile-tab--active" : ""}`}
-          onClick={() => setActiveTab("reviews")}
-        >
-          ☆ Reviews
-          <span className="tab-count">{mockReviews.length}</span>
         </button>
       </div>
 
@@ -166,33 +120,6 @@ export default function ProfilePage() {
         </div>
       )}
 
-      {/* Reviews */}
-      {activeTab === "reviews" && (
-        <div className="reviews-list">
-          <div className="reviews-summary">
-            <span className="reviews-big-score">4.9</span>
-            <div className="reviews-summary-right">
-              <div className="reviews-stars-row">★★★★★</div>
-              <p className="reviews-summary-label">Based on 24 reviews</p>
-            </div>
-          </div>
-          {mockReviews.map((r) => (
-            <div key={r.id} className="review-card">
-              <div className="review-header">
-                <div className="review-avatar" />
-                <div className="review-meta">
-                  <span className="review-reviewer">{r.reviewer}</span>
-                  <span className="review-date">{r.date}</span>
-                </div>
-                <div className="review-stars">
-                  {"★".repeat(r.rating)}{"☆".repeat(5 - r.rating)}
-                </div>
-              </div>
-              <p className="review-comment">{r.comment}</p>
-            </div>
-          ))}
-        </div>
-      )}
 
     </main>
   );
