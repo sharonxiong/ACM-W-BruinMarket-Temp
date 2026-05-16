@@ -1,4 +1,4 @@
-# ACM-W-BruinMarket-Temp
+# ACM-W-BruinMarket
 
 ## Running the Website
 
